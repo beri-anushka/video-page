@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Humanity Health</title>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/logo-icon.png"
+      type="image/x-icon"
+    />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      console.log("window.location", window.location.href.split("/")[4]);
+    </script>
+    <style>
+      body {
+        padding: 0px;
+        margin: 0px;
+        font-family: "Inter", sans-serif;
+      }
+      .parent-wrapper {
+        display: flex;
+      }
+      .content-section {
+        height: 100vh;
+        width: 50%;
+        padding: 0px 0px 0px 70px;
+      }
+      .logo {
+        margin: 41px 453px 43px 0;
+      }
+      #sponsor-intro {
+        font-family: P22Mackinac;
+        font-size: 36px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.28;
+        letter-spacing: -0.28px;
+        color: #082a58;
+      }
+      .description {
+        opacity: 0.8;
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: -0.12px;
+        color: #212123;
+      }
+      .join-button {
+        width: 244px;
+        border: none;
+        height: 50px;
+        border-radius: 25px;
+        background-color: #b5f85d;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.08px;
+        color: #082a58;
+      }
+      #sponsors-profiles {
+        margin-bottom: 12%;
+      }
+      .profile-details-container {
+        display: flex;
+        margin-top: 18px;
+      }
+      .profile-details-container:hover {
+        cursor: pointer;
+      }
+      .profile-picture-container {
+        padding-left: 5.5px;
+        height: 32px;
+        object-fit: contain;
+      }
+      .sponsor-about {
+        margin-left: 10px;
+      }
+      .user-name {
+        font-family: P22Mackinac;
+        font-size: 16px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: -0.12px;
+        color: #082a58;
+      }
+      .company-text {
+        opacity: 0.5;
+        font-family: Inter;
+        font-size: 13px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.54;
+        letter-spacing: -0.1px;
+        color: #082a58;
+      }
+      #overlapping-profiles {
+        margin-bottom: 11px;
+        padding-left: 20px;
+      }
+      .video-section {
+        width: 50%;
+        height: 100vh;
+      }
+      .video-container {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+      .circle-profile {
+        height: 39px;
+        width: 39px;
+        border-radius: 39px;
+      }
+    </style>
+  </head>
+  <body onload="getSponsorDetails()">
+    <div class="parent-wrapper">
+      <div class="content-section">
+        <img
+          src="https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/hh-logo.png"
+          alt="hh-logo"
+          class="logo"
+        />
+        <p id="sponsor-intro">
+          You have been sponsored by <span id="sponsor-names"></span> on
+          Humanity Talent Network.
+        </p>
+        <div id="sponsors-profiles"></div>
+
+        <div id="overlapping-profiles"></div>
+        <p class="description">
+          Join the exclusive community of Healthcare Professionals<br />
+          and be a part of our Talent Network.
+        </p>
+        <button class="join-button">Join Now</button>
+      </div>
+      <div class="video-section">
+        <video class="video-container" id="sponsor-video" controls autoplay>
+          <source
+            src="https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/yt1s.com+-+30+sec+introduction+video_1080p.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </div>
+    <script>
+      let Sponsors = [];
+      const profiles = [
+        {
+          link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-1.png",
+        },
+        {
+          link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-2.png",
+        },
+        {
+          link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-3.png",
+        },
+        {
+          link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-4.png",
+        },
+        {
+          link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-5.png",
+        },
+      ];
+
+      document.getElementById("overlapping-profiles").innerHTML = profiles
+        .map((profile) => {
+          return `
+        <img
+            src=${profile.link}
+            alt="profile"
+            class="circle-profile"
+            style="margin-left: -20px"
+          />
+        `;
+        })
+        .join("");
+
+      document.getElementById("sponsor-names").innerHTML = Sponsors.map(
+        (sponsor) => {
+          return `<span>${sponsor.name}</span>`;
+        }
+      ).join(" & ");
+
+      function activateSponsor(email) {
+        Sponsors.forEach((element) => {
+          if (element.email === email) {
+            document.getElementById(email).style.borderLeft =
+              "1px solid #082a58";
+          } else {
+            document.getElementById(element.email).style.borderLeft = "none";
+          }
+        });
+      }
+
+      function getSponsorDetails() {
+        axios
+          .get(
+            `http://54.186.137.122/v1/multi/sponsors/user/${
+              window.location.href.split("/")[4] || "ankitsprint3@yopmail.com"
+            }`
+          )
+          .then((res) => {
+            console.log("Response", res.data.result);
+            Sponsors = res.data.result;
+            console.log(Sponsors);
+            document.getElementById("sponsors-profiles").innerHTML =
+              Sponsors.map((sponsor, index) => {
+                return `<div class='profile-details-container' key=${index} id=${
+                  sponsor.email
+                } onclick="activateSponsor(${sponsor.email})">
+                <div class='profile-picture-container'>
+                  <img src=${
+                    sponsor.profile ||
+                    "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-1.png"
+                  } alt='profile' class='profile-picture' />
+              </div>
+              <div class='sponsor-about'>
+                <span class='user-name'>${sponsor.name}</span><br/>  
+                <span class='company-text'>${
+                  sponsor.designation || "Admin"
+                } at ${sponsor.company || "Humanity Health"}</span>  
+                </div> 
+                </div>`;
+              }).join("");
+            document.getElementById("sponsor-names").innerHTML = Sponsors.map(
+              (sponsor) => {
+                return `<span>${sponsor.name}</span>`;
+              }
+            ).join(" & ");
+            activateSponsor(Sponsors[0].email);
+          })
+          .catch((err) => {
+            console.log("Error", err);
+          });
+      }
+
+      // let Sponsors = [
+      // {
+      //   id: 1,
+      //   name: "Billie",
+      //   designation: "Healthcare Admin",
+      //   company: "Procter & Gamble",
+      //   profile:
+      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-1.png",
+      //   video:
+      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/test-video-nature.mp4",
+      // },
+      // {
+      //   id: 2,
+      //   name: "Jessy James",
+      //   designation: "Senior Neurologist",
+      //   company: "Moderna",
+      //   profile:
+      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-2.png",
+      //   video:
+      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/test-video-nature.mp4",
+      // },
+      // ];
+    </script>
+  </body>
+</html>
