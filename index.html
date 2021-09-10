@@ -15,9 +15,6 @@
       type="image/x-icon"
     />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-      console.log("window.location", window.location.href.split("/")[4]);
-    </script>
     <style>
       body {
         padding: 0px;
@@ -111,7 +108,7 @@
         margin-bottom: 11px;
         padding-left: 20px;
       }
-      .video-section {
+      #video-section {
         width: 50%;
         height: 100vh;
       }
@@ -148,17 +145,11 @@
         </p>
         <button class="join-button">Join Now</button>
       </div>
-      <div class="video-section">
-        <video class="video-container" id="sponsor-video" controls autoplay>
-          <source
-            src="https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/yt1s.com+-+30+sec+introduction+video_1080p.mp4"
-            type="video/mp4"
-          />
-        </video>
-      </div>
+      <div id="video-section"></div>
     </div>
     <script>
       let Sponsors = [];
+      const email = window.location.href.split("=")[1];
       const profiles = [
         {
           link: "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-1.png",
@@ -209,15 +200,9 @@
 
       function getSponsorDetails() {
         axios
-          .get(
-            `http://54.186.137.122/v1/multi/sponsors/user/${
-              window.location.href.split("/")[4] || "ankitsprint3@yopmail.com"
-            }`
-          )
+          .get(`http://54.186.137.122/v1/multi/sponsors/user/${email}`)
           .then((res) => {
-            console.log("Response", res.data.result);
             Sponsors = res.data.result;
-            console.log(Sponsors);
             document.getElementById("sponsors-profiles").innerHTML =
               Sponsors.map((sponsor, index) => {
                 return `<div class='profile-details-container' key=${index} id=${
@@ -237,40 +222,26 @@
                 </div> 
                 </div>`;
               }).join("");
+
             document.getElementById("sponsor-names").innerHTML = Sponsors.map(
               (sponsor) => {
                 return `<span>${sponsor.name}</span>`;
               }
             ).join(" & ");
+
+            var a = document.getElementById("video-section");
+            var b = document.createElement("video");
+            b.className = "video-container";
+            b.src = Sponsors[0].video;
+            b.controls = true;
+            a.appendChild(b);
             activateSponsor(Sponsors[0].email);
           })
           .catch((err) => {
             console.log("Error", err);
           });
       }
-
-      // let Sponsors = [
-      // {
-      //   id: 1,
-      //   name: "Billie",
-      //   designation: "Healthcare Admin",
-      //   company: "Procter & Gamble",
-      //   profile:
-      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-1.png",
-      //   video:
-      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/test-video-nature.mp4",
-      // },
-      // {
-      //   id: 2,
-      //   name: "Jessy James",
-      //   designation: "Senior Neurologist",
-      //   company: "Moderna",
-      //   profile:
-      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/profile-2.png",
-      //   video:
-      //     "https://humanity-health-assets-dev.s3.ap-south-1.amazonaws.com/test-video-nature.mp4",
-      // },
-      // ];
     </script>
   </body>
 </html>
+
